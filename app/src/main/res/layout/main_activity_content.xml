@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:name="com.hackret.tomindo.Frags.TaskLayer"
-        android:id="@+id/fragment"
+        android:id="@+id/task_layer_frag"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         tools:layout="@layout/task_layer_list" />

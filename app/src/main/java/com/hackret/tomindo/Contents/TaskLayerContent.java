@@ -16,28 +16,28 @@ public class TaskLayerContent {
     /**
      * An array of sample (dummy) items.
      */
-    public static final List<TaskItem> ITEMS = new ArrayList<TaskItem>();
+    public static List<TaskItem> ITEMS = new ArrayList<TaskItem>();
 
     /**
      * A map of sample (dummy) items, by ID.
      */
-    public static final Map<String, TaskItem> ITEM_MAP = new HashMap<String, TaskItem>();
+    public static Map<String, TaskItem> ITEM_MAP = new HashMap<String, TaskItem>();
 
     private static final int COUNT = 25;
 
     static {
         // Add some sample items.
         for (int i = 1; i <= COUNT; i++) {
-            addItem(createTaskItem(i));
+            createTmpTaskItem();
         }
     }
 
-    private static void addItem(TaskItem item) {
+
+    public static void createTmpTaskItem() {
+        int position = ITEMS.size() + 1;
+        System.out.println("Task " + String.valueOf(position));
+        TaskItem item = new TaskItem("Task " + String.valueOf(position), "Task Detail");
         ITEMS.add(item);
         ITEM_MAP.put(item.title, item);
-    }
-
-    private static TaskItem createTaskItem(int position) {
-        return new TaskItem("Task " + String.valueOf(position), "Task Detail");
     }
 }

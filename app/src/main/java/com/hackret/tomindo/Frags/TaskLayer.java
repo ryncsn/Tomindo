@@ -27,6 +27,7 @@ public class TaskLayer extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    private TaskLayerListAdapter mAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -68,7 +69,8 @@ public class TaskLayer extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new TaskLayerListAdapter(TaskLayerContent.ITEMS, mListener));
+            mAdapter = new TaskLayerListAdapter(TaskLayerContent.ITEMS, mListener);
+            recyclerView.setAdapter(mAdapter);
         }
         return view;
     }
@@ -104,5 +106,10 @@ public class TaskLayer extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(TaskItem item);
+    }
+
+    public void createTmpTask() {
+        TaskLayerContent.createTmpTaskItem();
+        mAdapter.notifyDataSetChanged();
     }
 }
