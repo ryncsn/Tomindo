@@ -10,8 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hackret.tomindo.Contents.TaskLayerContent;
-import com.hackret.tomindo.Items.TaskItem;
+import com.hackret.tomindo.Adapter.TaskLayerListAdapter;
+import com.hackret.tomindo.Models.TaskItem;
 import com.hackret.tomindo.R;
 
 /**
@@ -69,7 +69,8 @@ public class TaskLayer extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            mAdapter = new TaskLayerListAdapter(TaskLayerContent.ITEMS, mListener);
+
+            mAdapter = new TaskLayerListAdapter(TaskItem.all(), mListener);
             recyclerView.setAdapter(mAdapter);
         }
         return view;
@@ -108,8 +109,7 @@ public class TaskLayer extends Fragment {
         void onListFragmentInteraction(TaskItem item);
     }
 
-    public void createTmpTask() {
-        TaskLayerContent.createTmpTaskItem();
-        mAdapter.notifyDataSetChanged();
+    public void createNewTask() {
+        mAdapter.createNewTask();
     }
 }

@@ -15,7 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.hackret.tomindo.Frags.TaskLayer;
-import com.hackret.tomindo.Items.TaskItem;
+import com.hackret.tomindo.Models.TaskItem;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, TaskLayer.OnListFragmentInteractionListener {
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                taskLyer.createTmpTask();
+                taskLyer.createNewTask();
                 System.out.println("Called");
             }
         });
