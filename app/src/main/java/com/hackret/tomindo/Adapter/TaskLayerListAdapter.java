@@ -1,9 +1,13 @@
 package com.hackret.tomindo.Adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -89,7 +93,19 @@ public class TaskLayerListAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     @Override
+    public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
+        if (holder instanceof EditViewHolder) {
+            final EditViewHolder task_holder = (EditViewHolder) holder;
+            InputMethodManager imm = (InputMethodManager)
+                    task_holder.mContentEdit.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(task_holder.mContentEdit, InputMethodManager.SHOW_IMPLICIT);
+        }
+        super.onViewAttachedToWindow(holder);
+    }
+
+    @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        final TaskLayerListAdapter that = this;
         if (holder instanceof TaskViewHolder) {
             final TaskViewHolder task_holder = (TaskViewHolder) holder;
             task_holder.mItem = mDataSet.get(position);
@@ -111,7 +127,26 @@ public class TaskLayerListAdapter extends RecyclerView.Adapter<RecyclerView.View
             final EditViewHolder task_holder = (EditViewHolder) holder;
             task_holder.mItem = mDataSet.get(position);
             task_holder.mContentEdit.setText(mDataSet.get(position).details);
-
+            task_holder.mContentEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus) {
+                        task_holder.mItem.title = task_holder.mContentEdit.getText().toString();
+                        task_holder.mItem.details = task_holder.mContentEdit.getText().toString();
+                        task_holder.mItem.save();
+                        task_holder.mItem.editing = false;
+                    }
+                }
+            });
+            task_holder.mContentEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        task_holder.mContentEdit.clearFocus();
+                    }
+                    return false;
+                }
+            });
             task_holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -119,14 +154,16 @@ public class TaskLayerListAdapter extends RecyclerView.Adapter<RecyclerView.View
                         // Notify the active callbacks interface (the activity, if the
                         // fragment is attached to one) that an item has been selected.
                         mListener.onListFragmentInteraction(task_holder.mItem);
+                        that.notifyDataSetChanged();
                     }
                 }
             });
+            task_holder.mContentEdit.requestFocus();
         }
     }
 
-    public void createNewTask(){
-        mDataSet.add(new TaskItem("Task Title", "Task Detail", true));
+    public void createNewTask() {
+        mDataSet.add(0, new TaskItem("Task Title", "Task Detail", true));
         this.notifyDataSetChanged();
     }
 }

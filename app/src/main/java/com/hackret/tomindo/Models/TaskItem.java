@@ -9,8 +9,8 @@ import java.util.List;
 public class TaskItem {
     private static int id_count = 0;
     public final int id;
-    public final String title;
-    public final String details;
+    public String title;
+    public String details;
     public boolean editing;
 
     private static final int COUNT = 25;
@@ -39,6 +39,11 @@ public class TaskItem {
 
     public static List<TaskItem> all() {
         return ITEMS;
+    }
+
+    public void save() {
+        //TODO
+        return;
     }
 
     @Override
