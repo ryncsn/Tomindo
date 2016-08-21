@@ -6,11 +6,13 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.hackret.tomindo.Adapter.TaskLayerListAdapter;
+import com.hackret.tomindo.Helper.TaskItemTouchHelper;
 import com.hackret.tomindo.Models.TaskItem;
 import com.hackret.tomindo.R;
 
@@ -72,6 +74,10 @@ public class TaskLayer extends Fragment {
             }
 
             mAdapter = new TaskLayerListAdapter(TaskItem.all(), mListener);
+            TaskItemTouchHelper.Callback callback =
+                    new TaskItemTouchHelper.TaskItemCallback(mAdapter);
+            ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+            touchHelper.attachToRecyclerView(mRecyclerView);
             mRecyclerView.setAdapter(mAdapter);
         }
         return view;
@@ -111,7 +117,7 @@ public class TaskLayer extends Fragment {
     }
 
     public void createNewTask() {
-        mAdapter.createNewTask(0);
+        mAdapter.onTaskCreate(0);
         mRecyclerView.scrollToPosition(0);
     }
 }

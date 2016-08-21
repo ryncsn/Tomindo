@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.hackret.tomindo.Frags.TaskLayer.OnListFragmentInteractionListener;
+import com.hackret.tomindo.Helper.TaskItemTouchHelper;
 import com.hackret.tomindo.Models.TaskItem;
 import com.hackret.tomindo.R;
 
@@ -22,7 +23,9 @@ import java.util.List;
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class TaskLayerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class TaskLayerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+        implements TaskItemTouchHelper.TaskItemLayerAdapter {
+
     private enum TaskType {NEW_TASK, NORMAL_TASK}
 
     private final List<TaskItem> mDataSet;
@@ -31,6 +34,33 @@ public class TaskLayerListAdapter extends RecyclerView.Adapter<RecyclerView.View
     public TaskLayerListAdapter(List<TaskItem> items, OnListFragmentInteractionListener listener) {
         mDataSet = items;
         mListener = listener;
+    }
+
+    @Override
+    public void onTaskArchive(int pos) {
+        //TODO Archive instead of just remove
+        mDataSet.remove(pos);
+        this.notifyItemRemoved(pos);
+    }
+
+    @Override
+    public void onTaskDone(int pos) {
+        //TODO Done instead of just remove
+        mDataSet.remove(pos);
+        this.notifyItemRemoved(pos);
+    }
+
+    @Override
+    public void onTaskMove(int from, int to) {
+        TaskItem tmp = mDataSet.get(from);
+        mDataSet.remove(from);
+        mDataSet.add(to, tmp);
+        this.notifyItemMoved(from, to);
+    }
+
+    public void onTaskCreate(int position) {
+        mDataSet.add(position, new TaskItem("Task Title", "Task Detail", true));
+        this.notifyItemInserted(position);
     }
 
     @Override
@@ -161,8 +191,4 @@ public class TaskLayerListAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    public void createNewTask(int position) {
-        mDataSet.add(position, new TaskItem("Task Title", "Task Detail", true));
-        this.notifyDataSetChanged();
-    }
 }
