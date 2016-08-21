@@ -28,6 +28,7 @@ public class TaskLayer extends Fragment {
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     private TaskLayerListAdapter mAdapter;
+    private RecyclerView mRecyclerView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -63,15 +64,15 @@ public class TaskLayer extends Fragment {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            mRecyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+                mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
             mAdapter = new TaskLayerListAdapter(TaskItem.all(), mListener);
-            recyclerView.setAdapter(mAdapter);
+            mRecyclerView.setAdapter(mAdapter);
         }
         return view;
     }
@@ -110,6 +111,7 @@ public class TaskLayer extends Fragment {
     }
 
     public void createNewTask() {
-        mAdapter.createNewTask();
+        mAdapter.createNewTask(0);
+        mRecyclerView.scrollToPosition(0);
     }
 }

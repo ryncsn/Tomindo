@@ -25,7 +25,6 @@ import java.util.List;
 public class TaskLayerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private enum TaskType {NEW_TASK, NORMAL_TASK}
 
-    ;
     private final List<TaskItem> mDataSet;
     private final OnListFragmentInteractionListener mListener;
 
@@ -162,8 +161,8 @@ public class TaskLayerListAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    public void createNewTask() {
-        mDataSet.add(0, new TaskItem("Task Title", "Task Detail", true));
+    public void createNewTask(int position) {
+        mDataSet.add(position, new TaskItem("Task Title", "Task Detail", true));
         this.notifyDataSetChanged();
     }
 }
