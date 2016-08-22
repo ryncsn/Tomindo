@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.hackret.tomindo.Frags.TaskLayer;
+import com.hackret.tomindo.Helper.TaskItemDbHelper;
 import com.hackret.tomindo.Models.TaskItem;
 
 public class MainActivity extends AppCompatActivity
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TaskItem.setDbHandler(new TaskItemDbHelper(this));
         setContentView(R.layout.main_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -30,12 +32,11 @@ public class MainActivity extends AppCompatActivity
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        final TaskLayer taskLyer = (TaskLayer)fragmentManager.findFragmentById(R.id.task_layer_frag);
+        final TaskLayer taskLyer = (TaskLayer) fragmentManager.findFragmentById(R.id.task_layer_frag);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 taskLyer.createNewTask();
-                System.out.println("Called");
             }
         });
 
@@ -47,6 +48,12 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    protected void onStop() {
+        TaskItem.getmDbHandler().close();
+        super.onStop();
     }
 
     @Override

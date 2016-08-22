@@ -39,6 +39,7 @@ public class TaskLayerListAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public void onTaskArchive(int pos) {
         //TODO Archive instead of just remove
+        mDataSet.get(pos).delete();
         mDataSet.remove(pos);
         this.notifyItemRemoved(pos);
     }
@@ -46,21 +47,30 @@ public class TaskLayerListAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public void onTaskDone(int pos) {
         //TODO Done instead of just remove
+        mDataSet.get(pos).delete();
         mDataSet.remove(pos);
         this.notifyItemRemoved(pos);
     }
 
     @Override
     public void onTaskMove(int from, int to) {
-        TaskItem tmp = mDataSet.get(from);
-        mDataSet.remove(from);
-        mDataSet.add(to, tmp);
+        TaskItem from_item = mDataSet.get(from);
+        TaskItem to_item = mDataSet.get(to);
+        TaskItem tmp_item = new TaskItem(from_item);
+
+        from_item.fill(to_item).save();
+        to_item.fill(tmp_item).save();
+
         this.notifyItemMoved(from, to);
     }
 
     public void onTaskCreate(int position) {
-        mDataSet.add(position, new TaskItem("Task Title", "Task Detail", true));
+        mDataSet.add(position, new TaskItem("Task Title", "Task Detail"));
         this.notifyItemInserted(position);
+    }
+
+    public void saveAll(){
+        //Ignore
     }
 
     @Override
@@ -78,7 +88,7 @@ public class TaskLayerListAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemViewType(int position) {
-        return mDataSet.get(position).editing ?
+        return mDataSet.get(position).isNew() ?
                 TaskType.NEW_TASK.ordinal() : TaskType.NORMAL_TASK.ordinal();
     }
 
@@ -163,10 +173,10 @@ public class TaskLayerListAdapter extends RecyclerView.Adapter<RecyclerView.View
                         task_holder.mItem.title = task_holder.mContentEdit.getText().toString();
                         task_holder.mItem.details = task_holder.mContentEdit.getText().toString();
                         task_holder.mItem.save();
-                        task_holder.mItem.editing = false;
                     }
                 }
             });
+            task_holder.mContentEdit.selectAll();
             task_holder.mContentEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {

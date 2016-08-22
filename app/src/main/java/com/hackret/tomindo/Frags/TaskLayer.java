@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hackret.tomindo.Adapter.TaskLayerListAdapter;
+import com.hackret.tomindo.Helper.TaskItemDbHelper;
 import com.hackret.tomindo.Helper.TaskItemTouchHelper;
 import com.hackret.tomindo.Models.TaskItem;
 import com.hackret.tomindo.R;
@@ -56,6 +57,12 @@ public class TaskLayer extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
+    }
+
+    @Override
+    public void onStop() {
+        mAdapter.saveAll();
+        super.onStop();
     }
 
     @Override
