@@ -124,7 +124,7 @@ public class TaskLayer extends Fragment {
     }
 
     public void createNewTask() {
-        mAdapter.onTaskCreate(0);
+        mAdapter.onTaskCreate(0, TaskItem.MileStone.TYPE);
         mRecyclerView.scrollToPosition(0);
     }
 }

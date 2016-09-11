@@ -21,16 +21,23 @@ public class TaskItemDbHelper extends SQLiteOpenHelper {
     public static abstract class TaskItemEntry implements BaseColumns {
         public static final String TABLE_NAME = "tomindo_task";
         public static final String COLUMN_NAME_TITLE = "title";
+        public static final String COLUMN_NAME_TYPE = "type";
+        public static final String COLUMN_NAME_STATUS = "status";
         public static final String COLUMN_NAME_DETAIL = "detail";
+        public static final String COLUMN_NAME_PARENT = "parent";
     }
 
     private static final String TEXT_TYPE = " TEXT";
+    private static final String INTERGER_TYPE = " INTEGER";
     private static final String COMMA_SEP = ",";
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + TaskItemEntry.TABLE_NAME + " (" +
                     TaskItemEntry._ID + " INTEGER PRIMARY KEY," +
                     TaskItemEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
-                    TaskItemEntry.COLUMN_NAME_DETAIL + TEXT_TYPE +
+                    TaskItemEntry.COLUMN_NAME_DETAIL + TEXT_TYPE + COMMA_SEP +
+                    TaskItemEntry.COLUMN_NAME_TYPE + TEXT_TYPE + COMMA_SEP +
+                    TaskItemEntry.COLUMN_NAME_STATUS + INTERGER_TYPE + COMMA_SEP +
+                    TaskItemEntry.COLUMN_NAME_PARENT + TEXT_TYPE +
                     " )";
 
     private static final String SQL_DELETE_ENTRIES =

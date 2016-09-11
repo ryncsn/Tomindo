@@ -2,6 +2,7 @@ package com.hackret.tomindo.Adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,16 +57,26 @@ public class TaskLayerListAdapter extends RecyclerView.Adapter<RecyclerView.View
     public void onTaskMove(int from, int to) {
         TaskItem from_item = mDataSet.get(from);
         TaskItem to_item = mDataSet.get(to);
-        TaskItem tmp_item = new TaskItem(from_item);
 
-        from_item.fill(to_item).save();
-        to_item.fill(tmp_item).save();
+        TaskItem tmp_item = to_item;
+        mDataSet.set(to, from_item);
+        mDataSet.set(from, tmp_item);
+        from_item.swapOrder(to_item);
 
         this.notifyItemMoved(from, to);
     }
 
-    public void onTaskCreate(int position) {
-        mDataSet.add(position, new TaskItem("Task Title", "Task Detail"));
+    public void onTaskCreate(int position, String type) {
+        if (type.equals(TaskItem.Counter.TYPE)) {
+            mDataSet.add(position, new TaskItem.Counter("Task Title", "Task Detail"));
+        }
+        else if (type.equals(TaskItem.MileStone.TYPE)) {
+            mDataSet.add(position, new TaskItem.MileStone("Task Title", "Task Detail"));
+        }
+        else{
+            Log.e("", "onTaskCreate: UNKnown TASK TYPE: " + type);
+            Log.e("", "Supports: " + TaskItem.MileStone.TYPE + ", " + TaskItem.Counter.TYPE);
+        }
         this.notifyItemInserted(position);
     }
 

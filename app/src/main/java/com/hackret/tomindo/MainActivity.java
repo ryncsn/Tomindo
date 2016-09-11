@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onStop() {
-        TaskItem.getmDbHandler().close();
+        TaskItem.getDbHandler().close();
         super.onStop();
     }
 
