@@ -19,6 +19,7 @@ public abstract class TaskItem {
     public String title;
     public String details;
     public String type;
+    public boolean editing;
     protected Integer mStatus;
 
     //Handler for DB operation
@@ -96,23 +97,29 @@ public abstract class TaskItem {
         }
     }
 
+    public boolean isEditing() {
+        return this.editing;
+    }
     public boolean isNew() {
         return this.id == (TaskItemDbHelper.RESERVED_ID);
     }
 
     public TaskItem(String title, String details) {
+        this.editing = true;
         this.id = TaskItemDbHelper.RESERVED_ID;
         this.title = title;
         this.details = details;
     }
 
     protected TaskItem(long id, String title, String details) {
+        this.editing = false;
         this.id = id;
         this.title = title;
         this.details = details;
     }
 
     public TaskItem(TaskItem another, boolean clone) {
+        this.editing = false;
         this.title = another.title;
         this.details = another.details;
         if (clone == false) {
@@ -223,6 +230,7 @@ public abstract class TaskItem {
                     selectionArgs);
             db.close();
         }
+        this.editing = false;
     }
 
     public void delete() {

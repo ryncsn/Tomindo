@@ -27,7 +27,7 @@ import java.util.List;
 public class TaskLayerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         implements TaskItemTouchHelper.TaskItemLayerAdapter {
 
-    private enum TaskType {NEW_TASK, NORMAL_TASK}
+    private enum TaskType {EDITING_TASK, NORMAL_TASK}
 
     private final List<TaskItem> mDataSet;
     private final OnListFragmentInteractionListener mListener;
@@ -80,6 +80,11 @@ public class TaskLayerListAdapter extends RecyclerView.Adapter<RecyclerView.View
         this.notifyItemInserted(position);
     }
 
+    public void onTaskEdit(int position) {
+        mDataSet.get(position).editing = true;
+        this.notifyItemChanged(position);
+    }
+
     public void saveAll(){
         //Ignore
     }
@@ -99,8 +104,8 @@ public class TaskLayerListAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemViewType(int position) {
-        return mDataSet.get(position).isNew() ?
-                TaskType.NEW_TASK.ordinal() : TaskType.NORMAL_TASK.ordinal();
+        return mDataSet.get(position).isNew() || mDataSet.get(position).isEditing()?
+                TaskType.EDITING_TASK.ordinal() : TaskType.NORMAL_TASK.ordinal();
     }
 
     @Override
@@ -154,7 +159,7 @@ public class TaskLayerListAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final TaskLayerListAdapter that = this;
         if (holder instanceof TaskViewHolder) {
             final TaskViewHolder task_holder = (TaskViewHolder) holder;
@@ -167,7 +172,7 @@ public class TaskLayerListAdapter extends RecyclerView.Adapter<RecyclerView.View
                     if (null != mListener) {
                         // Notify the active callbacks interface (the activity, if the
                         // fragment is attached to one) that an item has been selected.
-                        mListener.onListFragmentInteraction(task_holder.mItem);
+                        mListener.onListFragmentInteraction(task_holder.mItem, position);
                     }
                 }
             });
@@ -187,7 +192,6 @@ public class TaskLayerListAdapter extends RecyclerView.Adapter<RecyclerView.View
                     }
                 }
             });
-            task_holder.mContentEdit.selectAll();
             task_holder.mContentEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -203,12 +207,13 @@ public class TaskLayerListAdapter extends RecyclerView.Adapter<RecyclerView.View
                     if (null != mListener) {
                         // Notify the active callbacks interface (the activity, if the
                         // fragment is attached to one) that an item has been selected.
-                        mListener.onListFragmentInteraction(task_holder.mItem);
+                        mListener.onListFragmentInteraction(task_holder.mItem, position);
                         that.notifyDataSetChanged();
                     }
                 }
             });
             task_holder.mContentEdit.requestFocus();
+            task_holder.mContentEdit.selectAll();
         }
     }
 

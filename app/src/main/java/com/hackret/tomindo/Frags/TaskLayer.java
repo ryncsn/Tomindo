@@ -120,11 +120,15 @@ public class TaskLayer extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(TaskItem item);
+        void onListFragmentInteraction(TaskItem item, int position);
     }
 
     public void createNewTask() {
         mAdapter.onTaskCreate(0, TaskItem.MileStone.TYPE);
         mRecyclerView.scrollToPosition(0);
+    }
+
+    public void editTask(int position) {
+        mAdapter.onTaskEdit(position);
     }
 }

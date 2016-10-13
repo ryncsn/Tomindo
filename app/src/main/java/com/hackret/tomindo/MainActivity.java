@@ -20,6 +20,7 @@ import com.hackret.tomindo.Models.TaskItem;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, TaskLayer.OnListFragmentInteractionListener {
+    private TaskLayer taskLayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,11 +33,11 @@ public class MainActivity extends AppCompatActivity
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        final TaskLayer taskLyer = (TaskLayer) fragmentManager.findFragmentById(R.id.task_layer_frag);
+        taskLayer = (TaskLayer) fragmentManager.findFragmentById(R.id.task_layer_frag);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                taskLyer.createNewTask();
+                taskLayer.createNewTask();
             }
         });
 
@@ -106,9 +107,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(TaskItem item) {
-        View view = getCurrentFocus();
-        Snackbar.make(view, "Item selected: " + item.title, Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
+    public void onListFragmentInteraction(TaskItem item, int position) {
+        taskLayer.editTask(position);
     }
 }
