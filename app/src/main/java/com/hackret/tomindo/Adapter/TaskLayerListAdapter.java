@@ -58,9 +58,8 @@ public class TaskLayerListAdapter extends RecyclerView.Adapter<RecyclerView.View
         TaskItem from_item = mDataSet.get(from);
         TaskItem to_item = mDataSet.get(to);
 
-        TaskItem tmp_item = to_item;
         mDataSet.set(to, from_item);
-        mDataSet.set(from, tmp_item);
+        mDataSet.set(from, to_item);
         from_item.swapOrder(to_item);
 
         this.notifyItemMoved(from, to);
@@ -160,7 +159,7 @@ public class TaskLayerListAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        final TaskLayerListAdapter that = this;
+        final TaskLayerListAdapter adapter = this;
         if (holder instanceof TaskViewHolder) {
             final TaskViewHolder task_holder = (TaskViewHolder) holder;
             task_holder.mItem = mDataSet.get(position);
@@ -169,11 +168,8 @@ public class TaskLayerListAdapter extends RecyclerView.Adapter<RecyclerView.View
             task_holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (null != mListener) {
-                        // Notify the active callbacks interface (the activity, if the
-                        // fragment is attached to one) that an item has been selected.
-                        mListener.onListFragmentInteraction(task_holder.mItem, position);
-                    }
+                    task_holder.mItem.editing = true;
+                    adapter.notifyDataSetChanged();
                 }
             });
         }
@@ -204,12 +200,8 @@ public class TaskLayerListAdapter extends RecyclerView.Adapter<RecyclerView.View
             task_holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (null != mListener) {
-                        // Notify the active callbacks interface (the activity, if the
-                        // fragment is attached to one) that an item has been selected.
-                        mListener.onListFragmentInteraction(task_holder.mItem, position);
-                        that.notifyDataSetChanged();
-                    }
+                    task_holder.mItem.editing = true;
+                    task_holder.mContentEdit.requestFocus();
                 }
             });
             task_holder.mContentEdit.requestFocus();
