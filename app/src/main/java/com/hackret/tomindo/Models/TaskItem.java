@@ -137,7 +137,6 @@ public abstract class TaskItem {
         long tmp = this.id;
         this.id = another.id;
         another.id = tmp;
-        this.save();
         another.save();
     }
 
