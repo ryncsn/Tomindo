@@ -138,6 +138,9 @@ public abstract class TaskItem {
         this.id = another.id;
         another.id = tmp;
         another.save();
+        if(!this.editing){
+            this.save();
+        }
     }
 
     public static List<TaskItem> all() {
